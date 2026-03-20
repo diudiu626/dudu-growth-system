@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>嘟嘟成长系统 | DUDU GROWTH SYSTEM</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #a855f7;
+            --secondary: #06b6d4;
+            --accent: #ec4899;
+            --dark-bg: #0f0117;
+            --card-bg: #1a0f2e;
+            --border: #3d2654;
+            --success: #4ade80;
+            --danger: #f87171;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', 'Orbitron', monospace;
+            background: linear-gradient(135deg, #0f0117 0%, #1a0f2e 50%, #0a0a1a 100%);
+            background-attachment: fixed;
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: drift 20s ease-in-out infinite;
+        }
+
+        @keyframes drift {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 30px 15px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding: 15px 20px;
+            background: rgba(26, 15, 46, 0.8);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 18px;
+            border: 2px solid transparent;
+            background: rgba(168, 85, 247, 0.1);
+            color: #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+        }
+
+        .card {
+            background: rgba(26, 15, 46, 0.9);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0.5;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 12px 48px rgba(168, 85, 247, 0.2);
+        }
+
+        .title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: #999;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .character-card {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-circle {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.6),
+                        inset 0 0 20px rgba(0, 0, 0, 0.3);
+            animation: pulse-glow 2s ease-in-out infinite;
+            border: 2px solid var(--secondary);
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.6), inset 0 0 20px rgba(0, 0, 0, 0.3); }
+            50% { box-shadow: 0 0 60px rgba(168, 85, 247, 0.9), inset 0 0 30px rgba(0, 0, 0, 0.5); }
+        }
+
+        .name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .status {
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .score-big {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin: 20px 0;
+            font-family: 'Orbitron', monospace;
+            text-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+        }
+
+        .score-label {
+            font-size: 0.85rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .mini-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .mini-stat {
+            background: rgba(168, 85, 247, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .mini-stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .mini-stat-label {
+            font-size: 0.75rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .form-input, .form-select {
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: 'Noto Sans SC', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 40px rgba(168, 85, 247, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(0, 0, 0, 0.3);
+            color: #e0e0e0;
+            border-color: var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(168, 85, 247, 0.1);
+            border-color: var(--primary);
+        }
+
+        .btn-danger {
+            background: rgba(248, 113, 113, 0.2);
+            color: #f87171;
+            border-color: #f87171;
+        }
+
+        .btn-danger:hover {
+            background: #f87171;
+            color: white;
+            box-shadow: 0 4px 20px rgba(248, 113, 113, 0.3);
+        }
+
+        .btn-small {
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+
+        .items-section {
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .items-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .items-list::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .items-list::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .item:hover {
+            border-color: var(--primary);
+            background: rgba(168, 85, 247, 0.1);
+            transform: translateX(5px);
+        }
+
+        .item-emoji {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #e0e0e0;
+            margin-bottom: 4px;
+            word-break: break-word;
+        }
+
+        .item-time {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .item-value {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--secondary);
+            min-width: 50px;
+            text-align: right;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .item-value.positive {
+            color: var(--success);
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+        }
+
+        .item-value.negative {
+            color: var(--danger);
+            text-shadow: 0 0 10px rgba(248, 113, 113, 0.5);
+        }
+
+        .item-delete {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--accent);
+            background: rgba(236, 72, 153, 0.1);
+            color: var(--accent);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .item-delete:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .attributes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .attributes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .attribute {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .attribute:hover {
+            border-color: var(--primary);
+            background: rgba(168, 85, 247, 0.1);
+        }
+
+        .attr-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .attr-emoji {
+            font-size: 1.5rem;
+        }
+
+        .attr-name {
+            font-weight: 700;
+            color: var(--secondary);
+            flex: 1;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .attr-level {
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Orbitron', monospace;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+            transition: width 0.5s ease;
+        }
+
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .reward-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reward-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(168, 85, 247, 0.2);
+        }
+
+        .reward-card.luxury {
+            border-color: var(--accent);
+            background: rgba(236, 72, 153, 0.05);
+        }
+
+        .reward-card.luxury::before {
+            content: '✨ 豪华 ✨';
+            position: absolute;
+            top: 10px;
+            right: -30px;
+            transform: rotate(45deg);
+            background: linear-gradient(135deg, var(--accent), #f97316);
+            color: white;
+            padding: 5px 40px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .reward-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .reward-name {
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .reward-desc {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 15px;
+            min-height: 40px;
+        }
+
+        .reward-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .reward-btn {
+            width: 100%;
+            padding: 10px;
+            background: rgba(168, 85, 247, 0.2);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .reward-btn:hover {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+        }
+
+        .reward-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+        }
+
+        .achievement {
+            aspect-ratio: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .achievement:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+        }
+
+        .achievement.locked {
+            opacity: 0.4;
+            filter: grayscale(100%);
+        }
+
+        .achievement-emoji {
+            font-size: 2rem;
+        }
+
+        .achievement-name {
+            font-size: 0.7rem;
+            color: #999;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            animation: slideIn 0.3s ease-out, slideOut 0.3s ease-out 2.7s forwards;
+            z-index: 1001;
+            box-shadow: 0 8px 32px rgba(168, 85, 247, 0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: rgba(26, 15, 46, 0.95);
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .attr-select {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .attr-option {
+            padding: 10px;
+            border: 2px solid var(--border);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #e0e0e0;
+        }
+
+        .attr-option:hover {
+            border-color: var(--primary);
+        }
+
+        .attr-option.selected {
+            border-color: var(--primary);
+            background: rgba(168, 85, 247, 0.2);
+            color: var(--primary);
+        }
+
+        .stats-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+        }
+
+        .stat-card-title {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .stat-card-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .stat-card-detail {
+            font-size: 0.8rem;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <button class="nav-btn active" onclick="switchView('main')">📊 主面板</button>
+            <button class="nav-btn" onclick="switchView('attributes')">🧬 属性面板</button>
+            <button class="nav-btn" onclick="switchView('shop')">🛍️ 奖励商城</button>
+            <button class="nav-btn" onclick="switchView('achievements')">🏆 成就</button>
+        </div>
+
+        <div id="mainView">
+            <div style="margin-bottom: 30px;">
+                <h1 class="title">⚡ 嘟嘟</h1>
+                <p class="subtitle">[ 成长系统 v4.0 ]</p>
+            </div>
+
+            <div class="main-grid">
+                <div class="card">
+                    <div class="record-form">
+                        <h3 class="section-title">📝 记录成长</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">选择项目</label>
+                            <select id="itemSelect" class="form-select" onchange="updateNewItemForm()">
+                                <option value="">-- 新增项目 --</option>
+                            </select>
+                        </div>
+
+                        <div id="newItemGroup" class="hidden">
+                            <div class="form-group">
+                                <label class="form-label">项目名称</label>
+                                <input type="text" id="newItemName" class="form-input" placeholder="例：跳舞、运动">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">表情符号</label>
+                                <input type="text" id="newItemEmoji" class="form-input" placeholder="🎵" maxlength="2">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">标准分数</label>
+                                <input type="number" id="newItemScore" class="form-input" placeholder="例：8 或 -15">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">属性分类</label>
+                                <div class="attr-select" id="attrSelect">
+                                    <!-- 动态生成 -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">分数值</label>
+                            <input type="number" id="scoreInput" class="form-input" placeholder="留空则用默认值">
+                        </div>
+
+                        <div class="form-buttons">
+                            <button class="btn btn-primary" onclick="recordScore()">记录</button>
+                        </div>
+                    </div>
+
+                    <div class="items-section" style="margin-top: 30px;">
+                        <div class="section-header">
+                            <h3 class="section-title">📅 今日记录</h3>
+                        </div>
+                        <div id="todayItems" class="items-list">
+                            <div class="empty">📝 今天还没有记录</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card character-card">
+                    <div class="avatar-circle" id="avatar">✨</div>
+                    
+                    <h2 class="name">嘟嘟</h2>
+                    <div class="status" id="characterStatus">初始化中...</div>
+                    
+                    <div style="border-top: 2px solid var(--border); padding-top: 20px; margin-top: 20px; width: 100%;">
+                        <div class="score-big" id="todayScore">0</div>
+                        <div class="score-label">今日分数</div>
+                    </div>
+
+                    <div class="mini-stats">
+                        <div class="mini-stat">
+                            <div class="mini-stat-value" id="totalScore">0</div>
+                            <div class="mini-stat-label">总成长值</div>
+                        </div>
+                        <div class="mini-stat">
+                            <div class="mini-stat-value" id="coins">0</div>
+                            <div class="mini-stat-label">💎积分</div>
+                        </div>
+                        <div class="mini-stat">
+                            <div class="mini-stat-value" id="level">1</div>
+                            <div class="mini-stat-label">等级</div>
+                        </div>
+                        <div class="mini-stat">
+                            <div class="mini-stat-value" id="streak">0</div>
+                            <div class="mini-stat-label">连续签到</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 25px; width: 100%;">
+                        <button class="btn btn-danger btn-small" style="width: 100%;" onclick="clearCoinsModal()">🗑️ 清空积分</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 日周对比 -->
+            <div class="stats-comparison">
+                <div class="stat-card">
+                    <div class="stat-card-title">📅 今日积分</div>
+                    <div class="stat-card-value" id="dailyCoins">0</div>
+                    <div class="stat-card-detail">今天获得的积分</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-title">📊 本周积分</div>
+                    <div class="stat-card-value" id="weeklyCoins">0</div>
+                    <div class="stat-card-detail">过去7天获得的积分</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="attributesView" class="hidden">
+            <h2 class="title" style="margin-bottom: 30px;">🧬 属性面板</h2>
+            <div class="card">
+                <div class="attributes-grid" id="attributesGrid"></div>
+            </div>
+        </div>
+
+        <div id="shopView" class="hidden">
+            <div style="margin-bottom: 30px;">
+                <h2 class="title">🛍️ 奖励商城</h2>
+                <div class="card" style="margin-bottom: 20px;">
+                    <div style="font-size: 1.2rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px;">💎 可用积分</div>
+                    <div class="score-big" id="coinsDisplay" style="margin: 15px 0; font-size: 2.5rem;">0</div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 class="section-title" style="margin-bottom: 20px;">⭐ 常规奖励</h3>
+                <div class="shop-grid" id="normalShop"></div>
+            </div>
+
+            <div>
+                <h3 class="section-title" style="margin-bottom: 20px;">👑 豪华奖励</h3>
+                <div class="shop-grid" id="luxuryShop"></div>
+            </div>
+        </div>
+
+        <div id="achievementsView" class="hidden">
+            <h2 class="title" style="margin-bottom: 30px;">🏆 成就系统</h2>
+            <div class="card">
+                <div class="achievements-grid" id="achievementsGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">×</button>
+            <h3 class="modal-title" id="modalTitle"></h3>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'duduGrowthV4';
+        const ITEMS_KEY = 'duduItemsV4';
+
+        // 属性定义
+        const attributes = {
+            health: { name: '健康值', emoji: '💚' },
+            fitness: { name: '体能值', emoji: '💪' },
+            intelligence: { name: '智识值', emoji: '🧠' },
+            charisma: { name: '魅力值', emoji: '✨' },
+            self_care: { name: '自律值', emoji: '🎯' },
+            focus: { name: '专注值', emoji: '🔥' },
+            courage: { name: '勇气值', emoji: '🦁' },
+            creativity: { name: '创意值', emoji: '🎨' },
+        };
+
+        // 默认项目 - 优化的分数权衡
+        const defaultItems = {
+            '🎯': { name: '主线任务/职业发展', score: 8, emoji: '🎯', attr: 'focus' },
+            '📚': { name: '阅读/学习/眼界提升', score: 6, emoji: '📚', attr: 'intelligence' },
+            '📱': { name: '发布小红书/TikTok视频', score: 7, emoji: '📱', attr: 'creativity' },
+            '🛠️': { name: '做出新的AI小工具', score: 7, emoji: '🛠️', attr: 'creativity' },
+            '🎵': { name: '跳舞', score: 8, emoji: '🎵', attr: 'charisma' },
+            '💪': { name: '运动/散步30min+', score: 8, emoji: '💪', attr: 'fitness' },
+            '💧': { name: '按时喝水', score: 2, emoji: '💧', attr: 'health' },
+            '🥗': { name: '健康饮食/足够蛋白质', score: 6, emoji: '🥗', attr: 'health' },
+            '💄': { name: '个人护理', score: 5, emoji: '💄', attr: 'self_care' },
+            '🚀': { name: '突破舒适圈/新活动', score: 5, emoji: '🚀', attr: 'courage' },
+            '👥': { name: '有效社交', score: 7, emoji: '👥', attr: 'charisma' },
+            '⚠️': { name: '一周少运动<3次', score: -15, emoji: '⚠️', attr: 'fitness', weekly: true },
+            '🍵': { name: '奶茶超3次', score: -10, emoji: '🍵', attr: 'health', weekly: true },
+            '📱⏰': { name: '手机超10小时', score: -10, emoji: '📱⏰', attr: 'self_care', daily: true },
+            '❌': { name: '一周主线任务<4次', score: -15, emoji: '❌', attr: 'focus', weekly: true },
+        };
+
+        // 默认奖励
+        const defaultRewards = {
+            normal: [
+                { id: 'r1', name: '瑜伽/冥想', desc: '30分钟放松身心', emoji: '🧘', price: 50 },
+                { id: 'r2', name: '音疗/声音浴', desc: '享受治愈音乐', emoji: '🎵', price: 55 },
+                { id: 'r3', name: '看播客/视频', desc: '精选内容时间', emoji: '🎧', price: 40 },
+                { id: 'r4', name: '喝奶茶', desc: '犒劳自己', emoji: '🧋', price: 60 },
+                { id: 'r5', name: '买衣服/配饰', desc: '更新衣柜', emoji: '👗', price: 80 },
+                { id: 'r6', name: '护肤品/彩妆', desc: '美丽投资', emoji: '💄', price: 75 },
+                { id: 'r7', name: '看电影', desc: '电影之夜', emoji: '🎬', price: 80 },
+                { id: 'r8', name: '看音乐剧/话剧', desc: '艺术享受', emoji: '🎭', price: 90 },
+                { id: 'r9', name: '桌游聚会', desc: '和朋友一起玩', emoji: '🎲', price: 70 },
+                { id: 'r10', name: '玩游戏', desc: '尽情游戏时间', emoji: '🎮', price: 45 },
+                { id: 'r11', name: '去美术馆/画廊', desc: '艺术鉴赏', emoji: '🎨', price: 100 },
+                { id: 'r12', name: '去集市', desc: '逛创意市集', emoji: '🎪', price: 80 },
+            ],
+            luxury: [
+                { id: 'l1', name: '看演唱会', desc: '追星去！', emoji: '🎤', price: 150 },
+                { id: 'l2', name: '去餐厅吃饭', desc: '享受美食', emoji: '🍽️', price: 120 },
+                { id: 'l3', name: '报艺术课程', desc: '学习新技能', emoji: '🎨', price: 180 },
+                { id: 'l4', name: '度假旅行', desc: '探索世界', emoji: '✈️', price: 300 },
+            ]
+        };
+
+        // 成就定义
+        const achievements = [
+            { id: 'first', name: '初出茅庐', emoji: '🌱', condition: () => data.total >= 10 },
+            { id: 'hundred', name: '百积之功', emoji: '💯', condition: () => data.total >= 100 },
+            { id: 'milestone', name: '里程碑', emoji: '🎯', condition: () => data.total >= 500 },
+            { id: 'legend', name: '传奇嘟嘟', emoji: '👑', condition: () => data.total >= 1000 },
+            { id: 'dancer', name: '舞蹈小能手', emoji: '💃', condition: () => countItem('🎵') >= 10 },
+            { id: 'reader', name: '书中自有黄金屋', emoji: '📖', condition: () => countItem('📚') >= 15 },
+            { id: 'athlete', name: '运动达人', emoji: '🏃', condition: () => countItem('💪') >= 12 },
+            { id: 'creator', name: '内容创作者', emoji: '📱', condition: () => countItem('📱') >= 5 },
+            { id: 'builder', name: 'AI工程师', emoji: '🛠️', condition: () => countItem('🛠️') >= 3 },
+            { id: 'brave', name: '勇敢者', emoji: '🦁', condition: () => countItem('🚀') >= 5 },
+        ];
+
+        let data = loadData();
+        let customItems = loadItems();
+
+        function loadData() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (!saved) return { daily: {}, total: 0, coins: 0, level: 1, streak: 0, records: [] };
+            return JSON.parse(saved);
+        }
+
+        function loadItems() {
+            const saved = localStorage.getItem(ITEMS_KEY);
+            return saved ? JSON.parse(saved) : defaultItems;
+        }
+
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        function saveItems() {
+            localStorage.setItem(ITEMS_KEY, JSON.stringify(customItems));
+        }
+
+        function getToday() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        function getThisWeek() {
+            const dates = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                dates.push(d.toISOString().split('T')[0]);
+            }
+            return dates;
+        }
+
+        function updateNewItemForm() {
+            const select = document.getElementById('itemSelect').value;
+            const newGroup = document.getElementById('newItemGroup');
+            if (select === '') {
+                newGroup.classList.remove('hidden');
+                renderAttrSelect();
+            } else {
+                newGroup.classList.add('hidden');
+            }
+        }
+
+        function renderAttrSelect() {
+            const container = document.getElementById('attrSelect');
+            const html = Object.entries(attributes).map(([key, attr]) => 
+                `<div class="attr-option" onclick="selectAttr('${key}', this)" data-attr="${key}">
+                    ${attr.emoji} ${attr.name}
+                </div>`
+            ).join('');
+            container.innerHTML = html;
+        }
+
+        function selectAttr(attr, el) {
+            document.querySelectorAll('.attr-option').forEach(opt => opt.classList.remove('selected'));
+            el.classList.add('selected');
+            document.getElementById('selectedAttr').value = attr;
+        }
+
+        function recordScore() {
+            const select = document.getElementById('itemSelect').value;
+            const scoreInput = document.getElementById('scoreInput').value;
+
+            if (select === '') {
+                const name = document.getElementById('newItemName').value.trim();
+                const emoji = document.getElementById('newItemEmoji').value.trim();
+                const score = parseFloat(document.getElementById('newItemScore').value);
+                const selectedAttr = document.getElementById('selectedAttr')?.value || 'other';
+
+                if (!name || !emoji || !score) {
+                    notify('请填完整信息');
+                    return;
+                }
+
+                customItems[emoji] = { 
+                    name, 
+                    score, 
+                    emoji,
+                    attr: selectedAttr
+                };
+                saveItems();
+                resetForm();
+                renderItems();
+                notify(`✅ 新增项目「${name}」成功！`);
+                return;
+            }
+
+            const item = customItems[select];
+            if (!item) return;
+
+            const score = scoreInput === '' ? item.score : parseFloat(scoreInput);
+            const today = getToday();
+
+            if (!data.daily[today]) data.daily[today] = [];
+
+            const time = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+            data.daily[today].push({ 
+                key: select, 
+                score, 
+                time,
+                name: item.name 
+            });
+
+            data.total += score;
+            data.coins += Math.abs(score);
+            data.records.push({ date: today, item: select, score });
+
+            checkPenalties();
+            updateLevel();
+            saveData();
+
+            document.getElementById('scoreInput').value = '';
+            document.getElementById('itemSelect').value = '';
+            updateUI();
+            notify(`记录成功 ${score > 0 ? '+' : ''}${score}分！`);
+        }
+
+        function checkPenalties() {
+            const today = getToday();
+            const week = getThisWeek();
+            
+            // 一周主线任务少于4次
+            let focusCount = 0;
+            week.forEach(date => {
+                if (data.daily[date]) {
+                    focusCount += data.daily[date].filter(r => r.key === '🎯').length;
+                }
+            });
+        }
+
+        function updateLevel() {
+            const levels = [0, 100, 300, 800, 1500, 3000];
+            for (let i = levels.length - 1; i >= 0; i--) {
+                if (data.total >= levels[i]) {
+                    data.level = i + 1;
+                    break;
+                }
+            }
+        }
+
+        function countItem(emoji) {
+            return data.records.filter(r => r.item === emoji).length;
+        }
+
+        function resetForm() {
+            document.getElementById('itemSelect').value = '';
+            document.getElementById('scoreInput').value = '';
+            document.getElementById('newItemName').value = '';
+            document.getElementById('newItemEmoji').value = '';
+            document.getElementById('newItemScore').value = '';
+            document.getElementById('newItemGroup').classList.add('hidden');
+        }
+
+        function renderItems() {
+            const select = document.getElementById('itemSelect');
+            select.innerHTML = '<option value="">-- 新增项目 --</option>';
+
+            Object.keys(customItems).forEach(key => {
+                const item = customItems[key];
+                select.innerHTML += `<option value="${key}">${item.emoji} ${item.name}</option>`;
+            });
+
+            updateUI();
+        }
+
+        function updateUI() {
+            const today = getToday();
+            const todayData = data.daily[today] || [];
+            const todayScore = todayData.reduce((sum, r) => sum + r.score, 0);
+
+            document.getElementById('todayScore').textContent = todayScore;
+            document.getElementById('totalScore').textContent = data.total;
+            document.getElementById('coins').textContent = data.coins;
+            document.getElementById('level').textContent = data.level;
+            document.getElementById('streak').textContent = data.streak || 0;
+            document.getElementById('coinsDisplay').textContent = data.coins;
+
+            // 每日和每周积分对比
+            const todayCoins = todayData.reduce((sum, r) => sum + Math.abs(r.score), 0);
+            document.getElementById('dailyCoins').textContent = todayCoins;
+
+            const week = getThisWeek();
+            let weeklyCoins = 0;
+            week.forEach(date => {
+                if (data.daily[date]) {
+                    weeklyCoins += data.daily[date].reduce((sum, r) => sum + Math.abs(r.score), 0);
+                }
+            });
+            document.getElementById('weeklyCoins').textContent = weeklyCoins;
+
+            // 角色状态
+            const statuses = [
+                { level: 1, status: '初心者', avatar: '✨' },
+                { level: 2, status: '小有成就', avatar: '⭐' },
+                { level: 3, status: '持续进步', avatar: '🌟' },
+                { level: 4, status: '砥砺奋进', avatar: '💫' },
+                { level: 5, status: '势不可挡', avatar: '👑' },
+                { level: 6, status: '传奇嘟嘟', avatar: '👸' },
+            ];
+            const current = statuses.find(s => s.level === data.level) || statuses[0];
+            document.getElementById('characterStatus').textContent = current.status;
+            document.getElementById('avatar').textContent = current.avatar;
+
+            updateTodayItems(todayData);
+            updateAttributesPanel();
+            updateAchievements();
+        }
+
+        function updateTodayItems(todayData) {
+            const container = document.getElementById('todayItems');
+            if (todayData.length === 0) {
+                container.innerHTML = '<div class="empty">📝 今天还没有记录</div>';
+                return;
+            }
+
+            container.innerHTML = todayData.map((record, idx) => {
+                const item = customItems[record.key];
+                if (!item) return '';
+                const isPositive = record.score > 0;
+                return `
+                    <div class="item">
+                        <div class="item-emoji">${item.emoji}</div>
+                        <div class="item-content">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-time">${record.time}</div>
+                        </div>
+                        <div class="item-value ${isPositive ? 'positive' : 'negative'}">${record.score > 0 ? '+' : ''}${record.score}</div>
+                        <button class="item-delete" onclick="deleteTodayRecord(${idx})">×</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteTodayRecord(idx) {
+            const today = getToday();
+            if (data.daily[today]) {
+                const record = data.daily[today][idx];
+                data.total -= record.score;
+                data.coins -= Math.abs(record.score);
+                data.daily[today].splice(idx, 1);
+                saveData();
+                updateUI();
+            }
+        }
+
+        function updateAttributesPanel() {
+            const container = document.getElementById('attributesGrid');
+            const attrValues = {};
+
+            Object.keys(attributes).forEach(key => attrValues[key] = 0);
+
+            data.records.forEach(record => {
+                const item = customItems[record.item];
+                if (item && item.attr && record.score > 0) {
+                    attrValues[item.attr] = (attrValues[item.attr] || 0) + record.score;
+                }
+            });
+
+            const html = Object.entries(attributes).map(([key, attr]) => {
+                const value = attrValues[key] || 0;
+                const level = Math.floor(value / 50) + 1;
+                const progress = (value % 50) / 50 * 100;
+                return `
+                    <div class="attribute">
+                        <div class="attr-header">
+                            <div class="attr-emoji">${attr.emoji}</div>
+                            <div class="attr-name">${attr.name}</div>
+                            <div class="attr-level">Lv.${level}</div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%;"></div>
+                        </div>
+                        <div style="font-size: 0.75rem; color: #999; margin-top: 8px;">${value}点</div>
+                    </div>
+                `;
+            }).join('');
+            container.innerHTML = html;
+        }
+
+        function updateAchievements() {
+            const container = document.getElementById('achievementsGrid');
+            const html = achievements.map(ach => {
+                const unlocked = ach.condition();
+                return `
+                    <div class="achievement ${unlocked ? '' : 'locked'}" title="${ach.name}">
+                        <div class="achievement-emoji">${ach.emoji}</div>
+                        <div class="achievement-name">${ach.name}</div>
+                    </div>
+                `;
+            }).join('');
+            container.innerHTML = html;
+        }
+
+        function renderShop() {
+            const normalHtml = defaultRewards.normal.map(reward => `
+                <div class="reward-card">
+                    <div class="reward-emoji">${reward.emoji}</div>
+                    <div class="reward-name">${reward.name}</div>
+                    <div class="reward-desc">${reward.desc}</div>
+                    <div class="reward-price">${reward.price} 💎</div>
+                    <button class="reward-btn" onclick="buyReward('normal', '${reward.id}')" ${data.coins < reward.price ? 'disabled' : ''}>
+                        ${data.coins >= reward.price ? '兑换' : '积分不足'}
+                    </button>
+                </div>
+            `).join('');
+
+            const luxuryHtml = defaultRewards.luxury.map(reward => `
+                <div class="reward-card luxury">
+                    <div class="reward-emoji">${reward.emoji}</div>
+                    <div class="reward-name">${reward.name}</div>
+                    <div class="reward-desc">${reward.desc}</div>
+                    <div class="reward-price">${reward.price} 💎</div>
+                    <button class="reward-btn" onclick="buyReward('luxury', '${reward.id}')" ${data.coins < reward.price ? 'disabled' : ''}>
+                        ${data.coins >= reward.price ? '兑换' : '积分不足'}
+                    </button>
+                </div>
+            `).join('');
+
+            document.getElementById('normalShop').innerHTML = normalHtml;
+            document.getElementById('luxuryShop').innerHTML = luxuryHtml;
+        }
+
+        function buyReward(type, id) {
+            let reward;
+            if (type === 'normal') reward = defaultRewards.normal.find(r => r.id === id);
+            else if (type === 'luxury') reward = defaultRewards.luxury.find(r => r.id === id);
+
+            if (!reward) return;
+
+            if (data.coins >= reward.price) {
+                data.coins -= reward.price;
+                saveData();
+                notify(`🎉 成功兑换「${reward.name}」`);
+                renderShop();
+                updateUI();
+            }
+        }
+
+        function switchView(view) {
+            document.querySelectorAll('[id$="View"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById(view + 'View').classList.remove('hidden');
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (view === 'shop') renderShop();
+        }
+
+        function notify(msg) {
+            const el = document.createElement('div');
+            el.className = 'notification';
+            el.textContent = msg;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        function clearCoinsModal() {
+            document.getElementById('modalTitle').textContent = '清空积分';
+            document.getElementById('modalBody').innerHTML = `
+                <p style="color: #999; margin-bottom: 20px;">确定要清空所有积分吗？这个操作无法撤销。</p>
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-danger" onclick="clearCoinsConfirm()" style="flex: 1;">确认清空</button>
+                    <button class="btn btn-secondary" onclick="closeModal()" style="flex: 1;">取消</button>
+                </div>
+            `;
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function clearCoinsConfirm() {
+            data.coins = 0;
+            saveData();
+            closeModal();
+            updateUI();
+            notify('✨ 积分已清空');
+        }
+
+        // 初始化
+        const input = document.createElement('input');
+        input.id = 'selectedAttr';
+        input.type = 'hidden';
+        input.value = 'other';
+        document.body.appendChild(input);
+
+        renderItems();
+        updateUI();
+    </script>
+</body>
+</html>
