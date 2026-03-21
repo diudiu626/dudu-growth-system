@@ -61,6 +61,31 @@
             padding: 30px 15px;
         }
 
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .language-toggle {
+            background: rgba(168, 85, 247, 0.2);
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 8px 15px;
+            cursor: pointer;
+            color: var(--secondary);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .language-toggle:hover {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+        }
+
         .nav {
             display: flex;
             gap: 10px;
@@ -823,26 +848,31 @@
 </head>
 <body>
     <div class="container">
+        <div class="header-top">
+            <div></div>
+            <button class="language-toggle" onclick="toggleLanguage()">🌐 <span id="langToggle">中 / EN</span></button>
+        </div>
+
         <div class="nav">
-            <button class="nav-btn active" onclick="switchView('main')">📊 主面板</button>
-            <button class="nav-btn" onclick="switchView('attributes')">🧬 属性面板</button>
-            <button class="nav-btn" onclick="switchView('shop')">🛍️ 奖励商城</button>
-            <button class="nav-btn" onclick="switchView('achievements')">🏆 成就</button>
+            <button class="nav-btn active" onclick="switchView('main')"><span class="nav-text" data-zh="📊 主面板" data-en="📊 Dashboard">📊 主面板</span></button>
+            <button class="nav-btn" onclick="switchView('attributes')"><span class="nav-text" data-zh="🧬 属性面板" data-en="🧬 Attributes">🧬 属性面板</span></button>
+            <button class="nav-btn" onclick="switchView('shop')"><span class="nav-text" data-zh="🛍️ 奖励商城" data-en="🛍️ Shop">🛍️ 奖励商城</span></button>
+            <button class="nav-btn" onclick="switchView('achievements')"><span class="nav-text" data-zh="🏆 成就" data-en="🏆 Achievements">🏆 成就</span></button>
         </div>
 
         <div id="mainView">
             <div style="margin-bottom: 30px;">
-                <h1 class="title">⚡ 嘟嘟</h1>
-                <p class="subtitle">[ 成长系统 v4.0 ]</p>
+                <h1 class="title">⚡ <span data-zh="嘟嘟" data-en="Dudu">嘟嘟</span></h1>
+                <p class="subtitle" id="subtitle"><span data-zh="[ 成长系统 v4.0 ]" data-en="[ Growth System v4.0 ]">[ 成长系统 v4.0 ]</span></p>
             </div>
 
             <div class="main-grid">
                 <div class="card">
                     <div class="record-form">
-                        <h3 class="section-title">📝 记录成长</h3>
+                        <h3 class="section-title" data-zh="📝 记录成长" data-en="📝 Log Activity">📝 记录成长</h3>
                         
                         <div class="form-group">
-                            <label class="form-label">选择项目</label>
+                            <label class="form-label" data-zh="选择项目" data-en="Select Activity">选择项目</label>
                             <select id="itemSelect" class="form-select" onchange="updateNewItemForm()">
                                 <option value="">-- 新增项目 --</option>
                             </select>
@@ -850,19 +880,19 @@
 
                         <div id="newItemGroup" class="hidden">
                             <div class="form-group">
-                                <label class="form-label">项目名称</label>
+                                <label class="form-label" data-zh="项目名称" data-en="Activity Name">项目名称</label>
                                 <input type="text" id="newItemName" class="form-input" placeholder="例：跳舞、运动">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">表情符号</label>
+                                <label class="form-label" data-zh="表情符号" data-en="Emoji">表情符号</label>
                                 <input type="text" id="newItemEmoji" class="form-input" placeholder="🎵" maxlength="2">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">标准分数</label>
+                                <label class="form-label" data-zh="标准分数" data-en="Score">标准分数</label>
                                 <input type="number" id="newItemScore" class="form-input" placeholder="例：8 或 -15">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">属性分类</label>
+                                <label class="form-label" data-zh="属性分类" data-en="Attribute">属性分类</label>
                                 <div class="attr-select" id="attrSelect">
                                     <!-- 动态生成 -->
                                 </div>
@@ -870,21 +900,21 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">分数值</label>
-                            <input type="number" id="scoreInput" class="form-input" placeholder="留空则用默认值">
+                            <label class="form-label" data-zh="分数值" data-en="Custom Score">分数值</label>
+                            <input type="number" id="scoreInput" class="form-input" placeholder="留空则用默认值" data-placeholder-zh="留空则用默认值" data-placeholder-en="Leave empty to use default">
                         </div>
 
                         <div class="form-buttons">
-                            <button class="btn btn-primary" onclick="recordScore()">记录</button>
+                            <button class="btn btn-primary" onclick="recordScore()"><span data-zh="记录" data-en="Log">记录</span></button>
                         </div>
                     </div>
 
                     <div class="items-section" style="margin-top: 30px;">
                         <div class="section-header">
-                            <h3 class="section-title">📅 今日记录</h3>
+                            <h3 class="section-title" data-zh="📅 今日记录" data-en="📅 Today's Records">📅 今日记录</h3>
                         </div>
                         <div id="todayItems" class="items-list">
-                            <div class="empty">📝 今天还没有记录</div>
+                            <div class="empty" data-zh="📝 今天还没有记录" data-en="📝 No records yet">📝 今天还没有记录</div>
                         </div>
                     </div>
                 </div>
@@ -892,35 +922,35 @@
                 <div class="card character-card">
                     <div class="avatar-circle" id="avatar">✨</div>
                     
-                    <h2 class="name">嘟嘟</h2>
+                    <h2 class="name">Dudu</h2>
                     <div class="status" id="characterStatus">初始化中...</div>
                     
                     <div style="border-top: 2px solid var(--border); padding-top: 20px; margin-top: 20px; width: 100%;">
                         <div class="score-big" id="todayScore">0</div>
-                        <div class="score-label">今日分数</div>
+                        <div class="score-label" data-zh="今日分数" data-en="Today's Score">今日分数</div>
                     </div>
 
                     <div class="mini-stats">
                         <div class="mini-stat">
                             <div class="mini-stat-value" id="totalScore">0</div>
-                            <div class="mini-stat-label">总成长值</div>
+                            <div class="mini-stat-label" data-zh="总成长值" data-en="Total Growth">总成长值</div>
                         </div>
                         <div class="mini-stat">
                             <div class="mini-stat-value" id="coins">0</div>
-                            <div class="mini-stat-label">💎积分</div>
+                            <div class="mini-stat-label" data-zh="💎积分" data-en="💎 Points">💎积分</div>
                         </div>
                         <div class="mini-stat">
                             <div class="mini-stat-value" id="level">1</div>
-                            <div class="mini-stat-label">等级</div>
+                            <div class="mini-stat-label" data-zh="等级" data-en="Level">等级</div>
                         </div>
                         <div class="mini-stat">
                             <div class="mini-stat-value" id="streak">0</div>
-                            <div class="mini-stat-label">连续签到</div>
+                            <div class="mini-stat-label" data-zh="连续签到" data-en="Streak">连续签到</div>
                         </div>
                     </div>
 
                     <div style="margin-top: 25px; width: 100%;">
-                        <button class="btn btn-danger btn-small" style="width: 100%;" onclick="clearCoinsModal()">🗑️ 清空积分</button>
+                        <button class="btn btn-danger btn-small" style="width: 100%;" onclick="clearCoinsModal()">🗑️ <span data-zh="清空积分" data-en="Clear Points">清空积分</span></button>
                     </div>
                 </div>
             </div>
@@ -928,20 +958,20 @@
             <!-- 日周对比 -->
             <div class="stats-comparison">
                 <div class="stat-card">
-                    <div class="stat-card-title">📅 今日积分</div>
+                    <div class="stat-card-title" data-zh="📅 今日积分" data-en="📅 Daily Points">📅 今日积分</div>
                     <div class="stat-card-value" id="dailyCoins">0</div>
-                    <div class="stat-card-detail">今天获得的积分</div>
+                    <div class="stat-card-detail" data-zh="今天获得的积分" data-en="Points earned today">今天获得的积分</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-card-title">📊 本周积分</div>
+                    <div class="stat-card-title" data-zh="📊 本周积分" data-en="📊 Weekly Points">📊 本周积分</div>
                     <div class="stat-card-value" id="weeklyCoins">0</div>
-                    <div class="stat-card-detail">过去7天获得的积分</div>
+                    <div class="stat-card-detail" data-zh="过去7天获得的积分" data-en="Points earned this week">过去7天获得的积分</div>
                 </div>
             </div>
         </div>
 
         <div id="attributesView" class="hidden">
-            <h2 class="title" style="margin-bottom: 30px;">🧬 属性面板</h2>
+            <h2 class="title" style="margin-bottom: 30px;" data-zh="🧬 属性面板" data-en="🧬 Attributes">🧬 属性面板</h2>
             <div class="card">
                 <div class="attributes-grid" id="attributesGrid"></div>
             </div>
@@ -949,26 +979,26 @@
 
         <div id="shopView" class="hidden">
             <div style="margin-bottom: 30px;">
-                <h2 class="title">🛍️ 奖励商城</h2>
+                <h2 class="title" data-zh="🛍️ 奖励商城" data-en="🛍️ Reward Shop">🛍️ 奖励商城</h2>
                 <div class="card" style="margin-bottom: 20px;">
-                    <div style="font-size: 1.2rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px;">💎 可用积分</div>
+                    <div style="font-size: 1.2rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px;" data-zh="💎 可用积分" data-en="💎 Available Points">💎 可用积分</div>
                     <div class="score-big" id="coinsDisplay" style="margin: 15px 0; font-size: 2.5rem;">0</div>
                 </div>
             </div>
 
             <div style="margin-bottom: 25px;">
-                <h3 class="section-title" style="margin-bottom: 20px;">⭐ 常规奖励</h3>
+                <h3 class="section-title" style="margin-bottom: 20px;" data-zh="⭐ 常规奖励" data-en="⭐ Standard Rewards">⭐ 常规奖励</h3>
                 <div class="shop-grid" id="normalShop"></div>
             </div>
 
             <div>
-                <h3 class="section-title" style="margin-bottom: 20px;">👑 豪华奖励</h3>
+                <h3 class="section-title" style="margin-bottom: 20px;" data-zh="👑 豪华奖励" data-en="👑 Premium Rewards">👑 豪华奖励</h3>
                 <div class="shop-grid" id="luxuryShop"></div>
             </div>
         </div>
 
         <div id="achievementsView" class="hidden">
-            <h2 class="title" style="margin-bottom: 30px;">🏆 成就系统</h2>
+            <h2 class="title" style="margin-bottom: 30px;" data-zh="🏆 成就系统" data-en="🏆 Achievements">🏆 成就系统</h2>
             <div class="card">
                 <div class="achievements-grid" id="achievementsGrid"></div>
             </div>
@@ -986,74 +1016,109 @@
     <script>
         const STORAGE_KEY = 'duduGrowthV4';
         const ITEMS_KEY = 'duduItemsV4';
+        const LANG_KEY = 'duduLanguage';
+
+        let currentLang = localStorage.getItem(LANG_KEY) || 'zh';
+
+        // 语言文本定义
+        const i18n = {
+            zh: {
+                selectNewItem: '-- 新增项目 --',
+                noRecords: '📝 今天还没有记录',
+                confirmClear: '确定要清空所有积分吗？这个操作无法撤销。',
+                confirmBtn: '确认清空',
+                cancelBtn: '取消',
+                cleared: '✨ 积分已清空',
+                clearTitle: '清空积分',
+                recordSuccess: '记录成功',
+                addItemSuccess: '新增项目',
+                success: '成功！',
+                notEnoughInfo: '请填完整信息',
+                clearCoinsBtn: '清空积分',
+            },
+            en: {
+                selectNewItem: '-- New Activity --',
+                noRecords: '📝 No records yet',
+                confirmClear: 'Are you sure you want to clear all points? This action cannot be undone.',
+                confirmBtn: 'Confirm',
+                cancelBtn: 'Cancel',
+                cleared: '✨ Points cleared',
+                clearTitle: 'Clear Points',
+                recordSuccess: 'Recorded successfully',
+                addItemSuccess: 'Activity added',
+                success: 'Success!',
+                notEnoughInfo: 'Please fill in all information',
+                clearCoinsBtn: 'Clear Points',
+            }
+        };
 
         // 属性定义
         const attributes = {
-            health: { name: '健康值', emoji: '💚' },
-            fitness: { name: '体能值', emoji: '💪' },
-            intelligence: { name: '智识值', emoji: '🧠' },
-            charisma: { name: '魅力值', emoji: '✨' },
-            self_care: { name: '自律值', emoji: '🎯' },
-            focus: { name: '专注值', emoji: '🔥' },
-            courage: { name: '勇气值', emoji: '🦁' },
-            creativity: { name: '创意值', emoji: '🎨' },
+            health: { name_zh: '健康值', name_en: 'Health', emoji: '💚' },
+            fitness: { name_zh: '体能值', name_en: 'Fitness', emoji: '💪' },
+            intelligence: { name_zh: '智识值', name_en: 'Intelligence', emoji: '🧠' },
+            charisma: { name_zh: '魅力值', name_en: 'Charisma', emoji: '✨' },
+            self_care: { name_zh: '自律值', name_en: 'Discipline', emoji: '🎯' },
+            focus: { name_zh: '专注值', name_en: 'Focus', emoji: '🔥' },
+            courage: { name_zh: '勇气值', name_en: 'Courage', emoji: '🦁' },
+            creativity: { name_zh: '创意值', name_en: 'Creativity', emoji: '🎨' },
         };
 
-        // 默认项目 - 优化的分数权衡
+        // 默认项目
         const defaultItems = {
-            '🎯': { name: '主线任务/职业发展', score: 8, emoji: '🎯', attr: 'focus' },
-            '📚': { name: '阅读/学习/眼界提升', score: 6, emoji: '📚', attr: 'intelligence' },
-            '📱': { name: '发布小红书/TikTok视频', score: 7, emoji: '📱', attr: 'creativity' },
-            '🛠️': { name: '做出新的AI小工具', score: 7, emoji: '🛠️', attr: 'creativity' },
-            '🎵': { name: '跳舞', score: 8, emoji: '🎵', attr: 'charisma' },
-            '💪': { name: '运动/散步30min+', score: 8, emoji: '💪', attr: 'fitness' },
-            '💧': { name: '按时喝水', score: 2, emoji: '💧', attr: 'health' },
-            '🥗': { name: '健康饮食/足够蛋白质', score: 6, emoji: '🥗', attr: 'health' },
-            '💄': { name: '个人护理', score: 5, emoji: '💄', attr: 'self_care' },
-            '🚀': { name: '突破舒适圈/新活动', score: 5, emoji: '🚀', attr: 'courage' },
-            '👥': { name: '有效社交', score: 7, emoji: '👥', attr: 'charisma' },
-            '⚠️': { name: '一周少运动<3次', score: -15, emoji: '⚠️', attr: 'fitness', weekly: true },
-            '🍵': { name: '奶茶超3次', score: -10, emoji: '🍵', attr: 'health', weekly: true },
-            '📱⏰': { name: '手机超10小时', score: -10, emoji: '📱⏰', attr: 'self_care', daily: true },
-            '❌': { name: '一周主线任务<4次', score: -15, emoji: '❌', attr: 'focus', weekly: true },
+            '🎯': { name_zh: '主线任务/职业发展', name_en: 'Main Task/Career', score: 8, emoji: '🎯', attr: 'focus' },
+            '📚': { name_zh: '阅读/学习/眼界提升', name_en: 'Reading/Learning', score: 6, emoji: '📚', attr: 'intelligence' },
+            '📱': { name_zh: '发布小红书/TikTok视频', name_en: 'Create Content', score: 7, emoji: '📱', attr: 'creativity' },
+            '🛠️': { name_zh: '做出新的AI小工具', name_en: 'Build AI Tool', score: 7, emoji: '🛠️', attr: 'creativity' },
+            '🎵': { name_zh: '跳舞', name_en: 'Dance', score: 8, emoji: '🎵', attr: 'charisma' },
+            '💪': { name_zh: '运动/散步30min+', name_en: 'Exercise', score: 8, emoji: '💪', attr: 'fitness' },
+            '💧': { name_zh: '按时喝水', name_en: 'Drink Water', score: 2, emoji: '💧', attr: 'health' },
+            '🥗': { name_zh: '健康饮食/足够蛋白质', name_en: 'Healthy Diet', score: 6, emoji: '🥗', attr: 'health' },
+            '💄': { name_zh: '个人护理', name_en: 'Self Care', score: 5, emoji: '💄', attr: 'self_care' },
+            '🚀': { name_zh: '突破舒适圈/新活动', name_en: 'New Experience', score: 5, emoji: '🚀', attr: 'courage' },
+            '👥': { name_zh: '有效社交', name_en: 'Social Time', score: 7, emoji: '👥', attr: 'charisma' },
+            '⚠️': { name_zh: '一周少运动<3次', name_en: 'Exercise < 3x', score: -15, emoji: '⚠️', attr: 'fitness', weekly: true },
+            '🍵': { name_zh: '奶茶超3次', name_en: 'Milk Tea > 3x', score: -10, emoji: '🍵', attr: 'health', weekly: true },
+            '📱⏰': { name_zh: '手机超10小时', name_en: 'Phone > 10h', score: -10, emoji: '📱⏰', attr: 'self_care', daily: true },
+            '❌': { name_zh: '一周主线任务<4次', name_en: 'Main Task < 4x', score: -15, emoji: '❌', attr: 'focus', weekly: true },
         };
 
         // 默认奖励
         const defaultRewards = {
             normal: [
-                { id: 'r1', name: '瑜伽/冥想', desc: '30分钟放松身心', emoji: '🧘', price: 50 },
-                { id: 'r2', name: '音疗/声音浴', desc: '享受治愈音乐', emoji: '🎵', price: 55 },
-                { id: 'r3', name: '看播客/视频', desc: '精选内容时间', emoji: '🎧', price: 40 },
-                { id: 'r4', name: '喝奶茶', desc: '犒劳自己', emoji: '🧋', price: 60 },
-                { id: 'r5', name: '买衣服/配饰', desc: '更新衣柜', emoji: '👗', price: 80 },
-                { id: 'r6', name: '护肤品/彩妆', desc: '美丽投资', emoji: '💄', price: 75 },
-                { id: 'r7', name: '看电影', desc: '电影之夜', emoji: '🎬', price: 80 },
-                { id: 'r8', name: '看音乐剧/话剧', desc: '艺术享受', emoji: '🎭', price: 90 },
-                { id: 'r9', name: '桌游聚会', desc: '和朋友一起玩', emoji: '🎲', price: 70 },
-                { id: 'r10', name: '玩游戏', desc: '尽情游戏时间', emoji: '🎮', price: 45 },
-                { id: 'r11', name: '去美术馆/画廊', desc: '艺术鉴赏', emoji: '🎨', price: 100 },
-                { id: 'r12', name: '去集市', desc: '逛创意市集', emoji: '🎪', price: 80 },
+                { id: 'r1', name_zh: '瑜伽/冥想', name_en: 'Yoga/Meditation', desc_zh: '30分钟放松身心', desc_en: '30 min relaxation', emoji: '🧘', price: 50 },
+                { id: 'r2', name_zh: '音疗/声音浴', name_en: 'Sound Bath', desc_zh: '享受治愈音乐', desc_en: 'Enjoy healing music', emoji: '🎵', price: 55 },
+                { id: 'r3', name_zh: '看播客/视频', name_en: 'Podcast/Video', desc_zh: '精选内容时间', desc_en: 'Curated content time', emoji: '🎧', price: 40 },
+                { id: 'r4', name_zh: '喝奶茶', name_en: 'Bubble Tea', desc_zh: '犒劳自己', desc_en: 'Treat yourself', emoji: '🧋', price: 60 },
+                { id: 'r5', name_zh: '买衣服/配饰', name_en: 'Shopping', desc_zh: '更新衣柜', desc_en: 'Update wardrobe', emoji: '👗', price: 80 },
+                { id: 'r6', name_zh: '护肤品/彩妆', name_en: 'Skincare', desc_zh: '美丽投资', desc_en: 'Beauty investment', emoji: '💄', price: 75 },
+                { id: 'r7', name_zh: '看电影', name_en: 'Movie Night', desc_zh: '电影之夜', desc_en: 'Movie time', emoji: '🎬', price: 80 },
+                { id: 'r8', name_zh: '看音乐剧/话剧', name_en: 'Theater', desc_zh: '艺术享受', desc_en: 'Art appreciation', emoji: '🎭', price: 90 },
+                { id: 'r9', name_zh: '桌游聚会', name_en: 'Game Night', desc_zh: '和朋友一起玩', desc_en: 'Play with friends', emoji: '🎲', price: 70 },
+                { id: 'r10', name_zh: '玩游戏', name_en: 'Gaming', desc_zh: '尽情游戏时间', desc_en: 'Gaming time', emoji: '🎮', price: 45 },
+                { id: 'r11', name_zh: '去美术馆/画廊', name_en: 'Gallery', desc_zh: '艺术鉴赏', desc_en: 'Art appreciation', emoji: '🎨', price: 100 },
+                { id: 'r12', name_zh: '去集市', name_en: 'Market', desc_zh: '逛创意市集', desc_en: 'Creative market', emoji: '🎪', price: 80 },
             ],
             luxury: [
-                { id: 'l1', name: '看演唱会', desc: '追星去！', emoji: '🎤', price: 150 },
-                { id: 'l2', name: '去餐厅吃饭', desc: '享受美食', emoji: '🍽️', price: 120 },
-                { id: 'l3', name: '报艺术课程', desc: '学习新技能', emoji: '🎨', price: 180 },
-                { id: 'l4', name: '度假旅行', desc: '探索世界', emoji: '✈️', price: 300 },
+                { id: 'l1', name_zh: '看演唱会', name_en: 'Concert', desc_zh: '追星去！', desc_en: 'Follow your stars!', emoji: '🎤', price: 150 },
+                { id: 'l2', name_zh: '去餐厅吃饭', name_en: 'Dining', desc_zh: '享受美食', desc_en: 'Fine dining', emoji: '🍽️', price: 120 },
+                { id: 'l3', name_zh: '报艺术课程', name_en: 'Art Class', desc_zh: '学习新技能', desc_en: 'Learn new skill', emoji: '🎨', price: 180 },
+                { id: 'l4', name_zh: '度假旅行', name_en: 'Vacation', desc_zh: '探索世界', desc_en: 'Explore world', emoji: '✈️', price: 300 },
             ]
         };
 
         // 成就定义
         const achievements = [
-            { id: 'first', name: '初出茅庐', emoji: '🌱', condition: () => data.total >= 10 },
-            { id: 'hundred', name: '百积之功', emoji: '💯', condition: () => data.total >= 100 },
-            { id: 'milestone', name: '里程碑', emoji: '🎯', condition: () => data.total >= 500 },
-            { id: 'legend', name: '传奇嘟嘟', emoji: '👑', condition: () => data.total >= 1000 },
-            { id: 'dancer', name: '舞蹈小能手', emoji: '💃', condition: () => countItem('🎵') >= 10 },
-            { id: 'reader', name: '书中自有黄金屋', emoji: '📖', condition: () => countItem('📚') >= 15 },
-            { id: 'athlete', name: '运动达人', emoji: '🏃', condition: () => countItem('💪') >= 12 },
-            { id: 'creator', name: '内容创作者', emoji: '📱', condition: () => countItem('📱') >= 5 },
-            { id: 'builder', name: 'AI工程师', emoji: '🛠️', condition: () => countItem('🛠️') >= 3 },
-            { id: 'brave', name: '勇敢者', emoji: '🦁', condition: () => countItem('🚀') >= 5 },
+            { id: 'first', name_zh: '初出茅庐', name_en: 'Newcomer', emoji: '🌱', condition: () => data.total >= 10 },
+            { id: 'hundred', name_zh: '百积之功', name_en: 'Centenary', emoji: '💯', condition: () => data.total >= 100 },
+            { id: 'milestone', name_zh: '里程碑', name_en: 'Milestone', emoji: '🎯', condition: () => data.total >= 500 },
+            { id: 'legend', name_zh: '传奇嘟嘟', name_en: 'Legend', emoji: '👑', condition: () => data.total >= 1000 },
+            { id: 'dancer', name_zh: '舞蹈小能手', name_en: 'Dancer', emoji: '💃', condition: () => countItem('🎵') >= 10 },
+            { id: 'reader', name_zh: '书中自有黄金屋', name_en: 'Reader', emoji: '📖', condition: () => countItem('📚') >= 15 },
+            { id: 'athlete', name_zh: '运动达人', name_en: 'Athlete', emoji: '🏃', condition: () => countItem('💪') >= 12 },
+            { id: 'creator', name_zh: '内容创作者', name_en: 'Creator', emoji: '📱', condition: () => countItem('📱') >= 5 },
+            { id: 'builder', name_zh: 'AI工程师', name_en: 'Builder', emoji: '🛠️', condition: () => countItem('🛠️') >= 3 },
+            { id: 'brave', name_zh: '勇敢者', name_en: 'Brave', emoji: '🦁', condition: () => countItem('🚀') >= 5 },
         ];
 
         let data = loadData();
@@ -1076,6 +1141,49 @@
 
         function saveItems() {
             localStorage.setItem(ITEMS_KEY, JSON.stringify(customItems));
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            localStorage.setItem(LANG_KEY, currentLang);
+            updateLanguage();
+        }
+
+        function updateLanguage() {
+            // 更新导航文本
+            document.querySelectorAll('[data-zh]').forEach(el => {
+                const text = el.getAttribute(`data-${currentLang}`);
+                if (text) el.textContent = text;
+            });
+
+            // 更新placeholder
+            const scoreInput = document.getElementById('scoreInput');
+            if (scoreInput) {
+                scoreInput.placeholder = currentLang === 'zh' ? '留空则用默认值' : 'Leave empty to use default';
+            }
+
+            // 更新选择器选项
+            renderItems();
+            updateUI();
+        }
+
+        function getText(key) {
+            return i18n[currentLang][key] || key;
+        }
+
+        function getItemName(item) {
+            const key = currentLang === 'zh' ? 'name_zh' : 'name_en';
+            return item[key] || item.name_zh;
+        }
+
+        function getRewardText(reward, field) {
+            const key = currentLang === 'zh' ? `${field}_zh` : `${field}_en`;
+            return reward[key] || reward[`${field}_zh`];
+        }
+
+        function getAttrName(attr) {
+            const key = currentLang === 'zh' ? 'name_zh' : 'name_en';
+            return attr[key] || attr.name_zh;
         }
 
         function getToday() {
@@ -1107,7 +1215,7 @@
             const container = document.getElementById('attrSelect');
             const html = Object.entries(attributes).map(([key, attr]) => 
                 `<div class="attr-option" onclick="selectAttr('${key}', this)" data-attr="${key}">
-                    ${attr.emoji} ${attr.name}
+                    ${attr.emoji} ${getAttrName(attr)}
                 </div>`
             ).join('');
             container.innerHTML = html;
@@ -1130,12 +1238,13 @@
                 const selectedAttr = document.getElementById('selectedAttr')?.value || 'other';
 
                 if (!name || !emoji || !score) {
-                    notify('请填完整信息');
+                    notify(getText('notEnoughInfo'));
                     return;
                 }
 
                 customItems[emoji] = { 
-                    name, 
+                    name_zh: name,
+                    name_en: name,
                     score, 
                     emoji,
                     attr: selectedAttr
@@ -1143,7 +1252,7 @@
                 saveItems();
                 resetForm();
                 renderItems();
-                notify(`✅ 新增项目「${name}」成功！`);
+                notify(`✅ ${getText('addItemSuccess')}「${name}」${getText('success')}`);
                 return;
             }
 
@@ -1160,34 +1269,20 @@
                 key: select, 
                 score, 
                 time,
-                name: item.name 
+                name: getItemName(item)
             });
 
             data.total += score;
             data.coins += Math.abs(score);
             data.records.push({ date: today, item: select, score });
 
-            checkPenalties();
             updateLevel();
             saveData();
 
             document.getElementById('scoreInput').value = '';
             document.getElementById('itemSelect').value = '';
             updateUI();
-            notify(`记录成功 ${score > 0 ? '+' : ''}${score}分！`);
-        }
-
-        function checkPenalties() {
-            const today = getToday();
-            const week = getThisWeek();
-            
-            // 一周主线任务少于4次
-            let focusCount = 0;
-            week.forEach(date => {
-                if (data.daily[date]) {
-                    focusCount += data.daily[date].filter(r => r.key === '🎯').length;
-                }
-            });
+            notify(`${getText('recordSuccess')} ${score > 0 ? '+' : ''}${score}${getText('success')}`);
         }
 
         function updateLevel() {
@@ -1215,11 +1310,11 @@
 
         function renderItems() {
             const select = document.getElementById('itemSelect');
-            select.innerHTML = '<option value="">-- 新增项目 --</option>';
+            select.innerHTML = `<option value="">${getText('selectNewItem')}</option>`;
 
             Object.keys(customItems).forEach(key => {
                 const item = customItems[key];
-                select.innerHTML += `<option value="${key}">${item.emoji} ${item.name}</option>`;
+                select.innerHTML += `<option value="${key}">${item.emoji} ${getItemName(item)}</option>`;
             });
 
             updateUI();
@@ -1237,7 +1332,6 @@
             document.getElementById('streak').textContent = data.streak || 0;
             document.getElementById('coinsDisplay').textContent = data.coins;
 
-            // 每日和每周积分对比
             const todayCoins = todayData.reduce((sum, r) => sum + Math.abs(r.score), 0);
             document.getElementById('dailyCoins').textContent = todayCoins;
 
@@ -1250,18 +1344,14 @@
             });
             document.getElementById('weeklyCoins').textContent = weeklyCoins;
 
-            // 角色状态
-            const statuses = [
-                { level: 1, status: '初心者', avatar: '✨' },
-                { level: 2, status: '小有成就', avatar: '⭐' },
-                { level: 3, status: '持续进步', avatar: '🌟' },
-                { level: 4, status: '砥砺奋进', avatar: '💫' },
-                { level: 5, status: '势不可挡', avatar: '👑' },
-                { level: 6, status: '传奇嘟嘟', avatar: '👸' },
-            ];
-            const current = statuses.find(s => s.level === data.level) || statuses[0];
-            document.getElementById('characterStatus').textContent = current.status;
-            document.getElementById('avatar').textContent = current.avatar;
+            const statuses_zh = ['初心者', '小有成就', '持续进步', '砥砺奋进', '势不可挡', '传奇嘟嘟'];
+            const statuses_en = ['Beginner', 'Achiever', 'Growing', 'Advancing', 'Unstoppable', 'Legend'];
+            const avatars = ['✨', '⭐', '🌟', '💫', '👑', '👸'];
+            
+            const idx = Math.min(data.level - 1, statuses_zh.length - 1);
+            const status = currentLang === 'zh' ? statuses_zh[idx] : statuses_en[idx];
+            document.getElementById('characterStatus').textContent = status;
+            document.getElementById('avatar').textContent = avatars[idx];
 
             updateTodayItems(todayData);
             updateAttributesPanel();
@@ -1271,7 +1361,7 @@
         function updateTodayItems(todayData) {
             const container = document.getElementById('todayItems');
             if (todayData.length === 0) {
-                container.innerHTML = '<div class="empty">📝 今天还没有记录</div>';
+                container.innerHTML = `<div class="empty">${getText('noRecords')}</div>`;
                 return;
             }
 
@@ -1283,7 +1373,7 @@
                     <div class="item">
                         <div class="item-emoji">${item.emoji}</div>
                         <div class="item-content">
-                            <div class="item-name">${item.name}</div>
+                            <div class="item-name">${getItemName(item)}</div>
                             <div class="item-time">${record.time}</div>
                         </div>
                         <div class="item-value ${isPositive ? 'positive' : 'negative'}">${record.score > 0 ? '+' : ''}${record.score}</div>
@@ -1322,17 +1412,18 @@
                 const value = attrValues[key] || 0;
                 const level = Math.floor(value / 50) + 1;
                 const progress = (value % 50) / 50 * 100;
+                const pointsText = currentLang === 'zh' ? `${value}点` : `${value} pts`;
                 return `
                     <div class="attribute">
                         <div class="attr-header">
                             <div class="attr-emoji">${attr.emoji}</div>
-                            <div class="attr-name">${attr.name}</div>
+                            <div class="attr-name">${getAttrName(attr)}</div>
                             <div class="attr-level">Lv.${level}</div>
                         </div>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: ${progress}%;"></div>
                         </div>
-                        <div style="font-size: 0.75rem; color: #999; margin-top: 8px;">${value}点</div>
+                        <div style="font-size: 0.75rem; color: #999; margin-top: 8px;">${pointsText}</div>
                     </div>
                 `;
             }).join('');
@@ -1343,10 +1434,11 @@
             const container = document.getElementById('achievementsGrid');
             const html = achievements.map(ach => {
                 const unlocked = ach.condition();
+                const name = currentLang === 'zh' ? ach.name_zh : ach.name_en;
                 return `
-                    <div class="achievement ${unlocked ? '' : 'locked'}" title="${ach.name}">
+                    <div class="achievement ${unlocked ? '' : 'locked'}" title="${name}">
                         <div class="achievement-emoji">${ach.emoji}</div>
-                        <div class="achievement-name">${ach.name}</div>
+                        <div class="achievement-name">${name}</div>
                     </div>
                 `;
             }).join('');
@@ -1357,11 +1449,11 @@
             const normalHtml = defaultRewards.normal.map(reward => `
                 <div class="reward-card">
                     <div class="reward-emoji">${reward.emoji}</div>
-                    <div class="reward-name">${reward.name}</div>
-                    <div class="reward-desc">${reward.desc}</div>
+                    <div class="reward-name">${getRewardText(reward, 'name')}</div>
+                    <div class="reward-desc">${getRewardText(reward, 'desc')}</div>
                     <div class="reward-price">${reward.price} 💎</div>
                     <button class="reward-btn" onclick="buyReward('normal', '${reward.id}')" ${data.coins < reward.price ? 'disabled' : ''}>
-                        ${data.coins >= reward.price ? '兑换' : '积分不足'}
+                        ${data.coins >= reward.price ? (currentLang === 'zh' ? '兑换' : 'Redeem') : (currentLang === 'zh' ? '积分不足' : 'Insufficient')}
                     </button>
                 </div>
             `).join('');
@@ -1369,11 +1461,11 @@
             const luxuryHtml = defaultRewards.luxury.map(reward => `
                 <div class="reward-card luxury">
                     <div class="reward-emoji">${reward.emoji}</div>
-                    <div class="reward-name">${reward.name}</div>
-                    <div class="reward-desc">${reward.desc}</div>
+                    <div class="reward-name">${getRewardText(reward, 'name')}</div>
+                    <div class="reward-desc">${getRewardText(reward, 'desc')}</div>
                     <div class="reward-price">${reward.price} 💎</div>
                     <button class="reward-btn" onclick="buyReward('luxury', '${reward.id}')" ${data.coins < reward.price ? 'disabled' : ''}>
-                        ${data.coins >= reward.price ? '兑换' : '积分不足'}
+                        ${data.coins >= reward.price ? (currentLang === 'zh' ? '兑换' : 'Redeem') : (currentLang === 'zh' ? '积分不足' : 'Insufficient')}
                     </button>
                 </div>
             `).join('');
@@ -1392,7 +1484,7 @@
             if (data.coins >= reward.price) {
                 data.coins -= reward.price;
                 saveData();
-                notify(`🎉 成功兑换「${reward.name}」`);
+                notify(`🎉 ${getText('success')}「${getRewardText(reward, 'name')}」`);
                 renderShop();
                 updateUI();
             }
@@ -1402,7 +1494,7 @@
             document.querySelectorAll('[id$="View"]').forEach(el => el.classList.add('hidden'));
             document.getElementById(view + 'View').classList.remove('hidden');
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            event.target.closest('.nav-btn').classList.add('active');
 
             if (view === 'shop') renderShop();
         }
@@ -1420,12 +1512,13 @@
         }
 
         function clearCoinsModal() {
-            document.getElementById('modalTitle').textContent = '清空积分';
+            const title = currentLang === 'zh' ? '清空积分' : 'Clear Points';
+            document.getElementById('modalTitle').textContent = title;
             document.getElementById('modalBody').innerHTML = `
-                <p style="color: #999; margin-bottom: 20px;">确定要清空所有积分吗？这个操作无法撤销。</p>
+                <p style="color: #999; margin-bottom: 20px;">${getText('confirmClear')}</p>
                 <div style="display: flex; gap: 12px;">
-                    <button class="btn btn-danger" onclick="clearCoinsConfirm()" style="flex: 1;">确认清空</button>
-                    <button class="btn btn-secondary" onclick="closeModal()" style="flex: 1;">取消</button>
+                    <button class="btn btn-danger" onclick="clearCoinsConfirm()" style="flex: 1;">${getText('confirmBtn')}</button>
+                    <button class="btn btn-secondary" onclick="closeModal()" style="flex: 1;">${getText('cancelBtn')}</button>
                 </div>
             `;
             document.getElementById('modal').classList.remove('hidden');
@@ -1436,7 +1529,7 @@
             saveData();
             closeModal();
             updateUI();
-            notify('✨ 积分已清空');
+            notify(getText('cleared'));
         }
 
         // 初始化
@@ -1446,8 +1539,8 @@
         input.value = 'other';
         document.body.appendChild(input);
 
-        renderItems();
-        updateUI();
+        // 初始更新语言
+        updateLanguage();
     </script>
 </body>
 </html>
